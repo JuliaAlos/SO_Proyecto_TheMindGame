@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
 			int codigo =  atoi (p);
 			p = strtok( NULL, "/");
 			char usuario[20];
-			char contraseña[20];
+			char password[20];
 			if (codigo == 0)
 			{
 				terminar =1;
@@ -92,53 +92,78 @@ int main(int argc, char *argv[])
 			else
 			{
 				
-				if ((codigo ==1) || (codigo ==2)) //Registrar usuario o login
+				if (codigo ==1) //Registrar usuario
 				{
 					strcpy (usuario,p);
 					p=strtok(NULL,"/");
-					strcpy (contraseña,p);
-					sprintf (consulta,"SELECT Jugador.Usuario FROM Jugador WHERE Jugador.Usuario = %s AND Jugador.Psw = %s",usuario,contraseña);
+					strcpy (password,p);
+					sprintf (consulta,"SELECT Jugador.Usuario FROM Jugador WHERE Jugador.Usuario = '%s' AND Jugador.Psw = '%s'",usuario,password);
 					err=mysql_query (conn, consulta);
 					if (err!=0) {
-						printf ("Error al consultar datos de la base %u %s\n", mysql_errno(conn), mysql_error(conn));
+						printf ("Error 1 al consultar datos de la base %u %s\n", mysql_errno(conn), mysql_error(conn));
 						exit (1);
 					}
 					resultado = mysql_store_result (conn);
 					row = mysql_fetch_row (resultado);
-					if ((row == NULL) && (codigo==1)) 
+					if (row == NULL) 
 					{
 						printf ("Usuario no existe\n");
-						err=mysql_query (conn, "SELECT Jugador.ID FROM Jugador WHERE MAX(Jugador.ID)");
+						printf("HOLA\n");
+						err=mysql_query (conn, "SELECT Jugador.ID FROM Jugador WHERE Jugador.ID = (SELECT MAX(Jugador.ID) FROM Jugador)");
+						printf("HOLA2\n");
 						if(err!=0){
-							printf ("Error al consultar datos de la base %u %s\n", mysql_errno(conn), mysql_error(conn));
+							printf ("Error 2 al consultar datos de la base %u %s\n", mysql_errno(conn), mysql_error(conn));
 							exit (1);
 						}
 						resultado = mysql_store_result (conn);
 						row = mysql_fetch_row (resultado);	
-						if (row == NULL)
-							row[0]=1;
+						printf("%s\n",row[0]);
+						int ID=1;
+						if (row != NULL)
+						{
+							ID = atoi(row[0])+1;
+						}
+						printf ("%d\n",ID);
+						char IDs[10];
+						sprintf(IDs,"%d",ID);
 						strcpy (consulta, "INSERT INTO Jugador VALUES (");	
-						strcat(consulta,atoi(row[0]));
-						strcat (consulta, ", '");
+						strcat(consulta,IDs);
+						strcat (consulta, ",'");
 						strcat (consulta, usuario);
-						strcat (consulta, "', '");
-						strcat (consulta, contraseña);
+						strcat (consulta, "','");
+						strcat (consulta, password);
 						strcat (consulta, "');");
+						printf("%s\n",consulta);
 						err = mysql_query(conn, consulta);
-						if (err!=0) {
-							printf ("Error al introducir datos la base %u %s\n", 
+						if (err!=0) 
+						{
+							printf ("Error 3 al introducir datos la base %u %s\n", 
 									mysql_errno(conn), mysql_error(conn));
 							exit (1);
 						}
 						strcpy(respuesta,"0");
 						
 					}
-					else if (codigo ==1)
+					else 
 					{
 						printf("El usuario %s ya existe\n", row[0]);
 						strcpy(respuesta,"1");
 					}
-					if ((row == NULL) && (codigo==2)) 
+				}
+				else if (codigo ==2) //Login
+				{
+					strcpy (usuario,p);
+					p=strtok(NULL,"/");
+					strcpy (password,p);
+					sprintf (consulta,"SELECT Jugador.Usuario FROM Jugador WHERE Jugador.Usuario = '%s' AND Jugador.Psw = '%s'",usuario,password);
+					err=mysql_query (conn, consulta);
+					if (err!=0) {
+						printf ("Error 1 al consultar datos de la base %u %s\n", mysql_errno(conn), mysql_error(conn));
+						exit (1);
+					}
+					resultado = mysql_store_result (conn);
+					row = mysql_fetch_row (resultado);
+					if (row == NULL) 
 					{
 						printf ("Error en los datos del usuario");
 						strcpy(respuesta,"1");
@@ -147,6 +172,86 @@ int main(int argc, char *argv[])
 					{
 						printf ("Login correct");
 						strcpy(respuesta,"0");
+					}
+				}
+				else if (codigo ==3)
+				{
+					//Consulta para que de la persona que menos ha tardado en ganar una partida
+					err=mysql_query (conn, "SELECT Partida.Winner FROM Partida WHERE Partida.Time = (SELECT MIN(Partida.Time) FROM Partida)");
+					if (err!=0) {
+						printf ("Error al consultar datos de la base %u %s\n", mysql_errno(conn), mysql_error(conn));
+						exit (1);
+					}
+					resultado = mysql_store_result (conn);
+					char nombre[20];
+					row = mysql_fetch_row (resultado);
+					if (row == NULL) {
+						printf ("No se han obtenido datos en la consulta\n");
+					}
+					else{
+						while (row !=NULL) {
+							//nombre = row[0];
+							printf("El Jugador que mas rapido ha sido: %s\n", row[0]);
+							strcpy(respuesta,row[0]);
+							row = mysql_fetch_row (resultado);
+						}
+					}
+				}
+				else if (codigo == 4)
+				{
+					//CONSULTA PARA QUE DE LA LISTA DE PERSONAS QUE GANARON UNA PARTIDA DONDE JUGÓ JOEL
+					err=mysql_query (conn, "SELECT DISTINCT Partida.Winner FROM (Partida, Participantes) WHERE Partida.ID IN (SELECT Participantes.ID_P FROM Participantes WHERE Participantes.ID_J=1)");
+					if (err!=0) {
+						printf ("Error al consultar datos de la base %u %s\n", mysql_errno(conn), mysql_error(conn));
+						exit (1);
+					}
+					resultado = mysql_store_result (conn);
+					row = mysql_fetch_row (resultado);
+					if (row == NULL) {
+						printf ("No se han obtenido datos en la consulta\n");
+					}
+					else{
+						while (row !=NULL) {
+							printf("%s\n", row[0]);
+							sprintf(respuesta, "%s/",row[0]);
+							row = mysql_fetch_row (resultado);
+						}
+					}
+				
+				}
+				else if (codigo ==5)
+				{
+					//Consulta para que de la persona que mas veces a jugado
+					err=mysql_query (conn, "SELECT Jugador.Usuario FROM (Jugador, Participantes) WHERE Jugador.ID = Participantes.ID_J ");
+					if (err!=0) {
+						printf ("Error al consultar datos de la base %u %s\n", mysql_errno(conn), mysql_error(conn));
+						exit (1);
+					}
+					resultado = mysql_store_result (conn);
+					char nombre[20];
+					int cont=0;
+					int max=0;
+					char max_j[20];
+					row = mysql_fetch_row (resultado);
+					if (row == NULL) {
+						printf ("No se han obtenido datos en la consulta\n");
+					}
+					else{
+						while (row !=NULL) {
+							strcpy(nombre,row[0]);
+							if(strcmp(nombre,row[0])!=0){
+								cont=0;
+							}
+							if(cont > max){
+								max = cont;
+								strcpy(max_j,nombre);
+							}
+							cont++;
+							row = mysql_fetch_row (resultado);
+						}
+						printf("El Jugador que mas partidas ha jugado es: %s\n", max_j);
+						strcpy(respuesta,max_j);
+						
 					}
 				}
 				

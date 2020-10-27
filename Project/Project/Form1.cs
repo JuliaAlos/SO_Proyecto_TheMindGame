@@ -24,7 +24,7 @@ namespace WindowsFormsApplication1
             //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
             //al que deseamos conectarnos
             IPAddress direc = IPAddress.Parse("192.168.56.102");
-            IPEndPoint ipep = new IPEndPoint(direc, 9060);
+            IPEndPoint ipep = new IPEndPoint(direc, 9050);
 
 
             //Creamos el socket 
@@ -123,7 +123,7 @@ namespace WindowsFormsApplication1
                     byte[] msg2 = new byte[80];
                     server.Receive(msg2);
                     mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
-                    if (mensaje == "1")
+                    if (mensaje == "0")
                     {
                         MessageBox.Show(Usuario.Text + " registrado correctamente");
                     }
