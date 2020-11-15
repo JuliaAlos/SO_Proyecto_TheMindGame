@@ -28,18 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.Registro_botton = new System.Windows.Forms.Button();
             this.Usuario = new System.Windows.Forms.TextBox();
             this.Contraseña = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.Conectar = new System.Windows.Forms.Button();
             this.Desconectar = new System.Windows.Forms.Button();
             this.Login = new System.Windows.Forms.Button();
             this.Rapido = new System.Windows.Forms.RadioButton();
             this.Ganadores = new System.Windows.Forms.RadioButton();
             this.Viciado = new System.Windows.Forms.RadioButton();
             this.Consultar = new System.Windows.Forms.Button();
+            this.ConectadosGrid = new System.Windows.Forms.DataGridView();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.ConectadosGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // Registro_botton
@@ -84,16 +87,6 @@
             this.label2.TabIndex = 4;
             this.label2.Text = "Contraseña:";
             // 
-            // Conectar
-            // 
-            this.Conectar.Location = new System.Drawing.Point(468, 12);
-            this.Conectar.Name = "Conectar";
-            this.Conectar.Size = new System.Drawing.Size(90, 23);
-            this.Conectar.TabIndex = 5;
-            this.Conectar.Text = "Conectar";
-            this.Conectar.UseVisualStyleBackColor = true;
-            this.Conectar.Click += new System.EventHandler(this.Conectar_Click);
-            // 
             // Desconectar
             // 
             this.Desconectar.Location = new System.Drawing.Point(585, 12);
@@ -117,7 +110,7 @@
             // Rapido
             // 
             this.Rapido.AutoSize = true;
-            this.Rapido.Location = new System.Drawing.Point(314, 102);
+            this.Rapido.Location = new System.Drawing.Point(485, 59);
             this.Rapido.Name = "Rapido";
             this.Rapido.Size = new System.Drawing.Size(190, 17);
             this.Rapido.TabIndex = 9;
@@ -128,7 +121,7 @@
             // Ganadores
             // 
             this.Ganadores.AutoSize = true;
-            this.Ganadores.Location = new System.Drawing.Point(314, 125);
+            this.Ganadores.Location = new System.Drawing.Point(485, 81);
             this.Ganadores.Name = "Ganadores";
             this.Ganadores.Size = new System.Drawing.Size(202, 17);
             this.Ganadores.TabIndex = 10;
@@ -139,7 +132,7 @@
             // Viciado
             // 
             this.Viciado.AutoSize = true;
-            this.Viciado.Location = new System.Drawing.Point(314, 154);
+            this.Viciado.Location = new System.Drawing.Point(485, 102);
             this.Viciado.Name = "Viciado";
             this.Viciado.Size = new System.Drawing.Size(165, 17);
             this.Viciado.TabIndex = 11;
@@ -149,7 +142,7 @@
             // 
             // Consultar
             // 
-            this.Consultar.Location = new System.Drawing.Point(314, 177);
+            this.Consultar.Location = new System.Drawing.Point(543, 125);
             this.Consultar.Name = "Consultar";
             this.Consultar.Size = new System.Drawing.Size(90, 23);
             this.Consultar.TabIndex = 12;
@@ -157,18 +150,31 @@
             this.Consultar.UseVisualStyleBackColor = true;
             this.Consultar.Click += new System.EventHandler(this.Consultar_Click);
             // 
+            // ConectadosGrid
+            // 
+            this.ConectadosGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.ConectadosGrid.Location = new System.Drawing.Point(220, 59);
+            this.ConectadosGrid.Name = "ConectadosGrid";
+            this.ConectadosGrid.Size = new System.Drawing.Size(240, 150);
+            this.ConectadosGrid.TabIndex = 13;
+           
+            // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(687, 320);
+            this.Controls.Add(this.ConectadosGrid);
             this.Controls.Add(this.Consultar);
             this.Controls.Add(this.Viciado);
             this.Controls.Add(this.Ganadores);
             this.Controls.Add(this.Rapido);
             this.Controls.Add(this.Login);
             this.Controls.Add(this.Desconectar);
-            this.Controls.Add(this.Conectar);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.Contraseña);
@@ -176,6 +182,8 @@
             this.Controls.Add(this.Registro_botton);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.ConectadosGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -188,13 +196,14 @@
         private System.Windows.Forms.TextBox Contraseña;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button Conectar;
         private System.Windows.Forms.Button Desconectar;
         private System.Windows.Forms.Button Login;
         private System.Windows.Forms.RadioButton Rapido;
         private System.Windows.Forms.RadioButton Ganadores;
         private System.Windows.Forms.RadioButton Viciado;
         private System.Windows.Forms.Button Consultar;
+        private System.Windows.Forms.DataGridView ConectadosGrid;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 
