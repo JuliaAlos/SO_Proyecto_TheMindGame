@@ -9,5 +9,5 @@
 -->Verificador Júlia
 
 #Version 3
---> Manager Fran
---> Verificador Joel
+-->Manager Fran
+-->Verificador Joel
