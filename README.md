@@ -7,3 +7,7 @@
 #Version 2
 -->Manager Joel
 -->Verificador Júlia
+
+#Version 3
+--> Manager Fran
+--> Verificador Joel
