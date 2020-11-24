@@ -7,7 +7,6 @@ CREATE TABLE Jugador(
    ID INT NOT NULL,
    Usuario VARCHAR(50) NOT NULL, 
    Psw VARCHAR(50),
-   Conectado INT,
    PRIMARY KEY (ID) 
 
 )ENGINE=InnoDB;
@@ -29,9 +28,9 @@ CREATE TABLE Participantes(
 
 )ENGINE=InnoDB;
 
-INSERT INTO Jugador VALUES (1, 'Joel', 'Delgar24', 0);
-INSERT INTO Jugador VALUES (2, 'Julia', 'pumpkin', 0);
-INSERT INTO Jugador VALUES (3, 'Fran', '1234a5b', 0);
+INSERT INTO Jugador VALUES (1, 'Joel', 'Delgar24');
+INSERT INTO Jugador VALUES (2, 'Julia', 'pumpkin');
+INSERT INTO Jugador VALUES (3, 'Fran', '1234a5b');
 
 INSERT INTO Partida VALUES (1, '13/10/2020-17:23', 20, 'Joel');
 INSERT INTO Partida VALUES (2, '13/10/2020-17:50', 15, 'Julia');
