@@ -565,7 +565,7 @@ void RespuestaInvitacion(char respuesta[300]){
 			sprintf(notificacion,"8/0/0,%d",IDpartida);
 			write (Partidas.ListaPartidas[IDpartida].PartidaJugadores[0].socket,notificacion, strlen(notificacion));
 		}
-			
+		
 		
 	}
 	
@@ -575,8 +575,9 @@ void NuevoMensaje(char mensaje[100], int idPartida){
 	printf("Respuesta %s\n",mensaje);
 	char notificacion[512];
 	sprintf(notificacion, "9/%d/%s", idPartida, mensaje);
-	write(sockets[0], notificacion, strlen(notificacion)); 
-	write(sockets[1], notificacion, strlen(notificacion));
+	for(int i=0; i<Partidas.ListaPartidas[idPartida].num;i++){
+		write (Partidas.ListaPartidas[idPartida].PartidaJugadores[i].socket,notificacion, strlen(notificacion));
+	}
 }
 
 int main(int argc, char *argv[])
@@ -635,4 +636,5 @@ int main(int argc, char *argv[])
 			i=0;
 	}
 }
+
 
