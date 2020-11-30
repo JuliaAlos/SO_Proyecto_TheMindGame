@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.Registro_botton = new System.Windows.Forms.Button();
             this.Usuario = new System.Windows.Forms.TextBox();
             this.Contraseña = new System.Windows.Forms.TextBox();
@@ -41,7 +40,7 @@
             this.Viciado = new System.Windows.Forms.RadioButton();
             this.Consultar = new System.Windows.Forms.Button();
             this.ConectadosGrid = new System.Windows.Forms.DataGridView();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.Invitar = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.ConectadosGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -155,19 +154,27 @@
             this.ConectadosGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ConectadosGrid.Location = new System.Drawing.Point(220, 59);
             this.ConectadosGrid.Name = "ConectadosGrid";
+            this.ConectadosGrid.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.Empty;
             this.ConectadosGrid.Size = new System.Drawing.Size(240, 150);
             this.ConectadosGrid.TabIndex = 13;
-           
+            this.ConectadosGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ConectadosGrid_CellClick);
             // 
-            // timer1
+            // Invitar
             // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.Invitar.Location = new System.Drawing.Point(295, 215);
+            this.Invitar.Name = "Invitar";
+            this.Invitar.Size = new System.Drawing.Size(90, 23);
+            this.Invitar.TabIndex = 14;
+            this.Invitar.Text = "Invitar";
+            this.Invitar.UseVisualStyleBackColor = true;
+            this.Invitar.Click += new System.EventHandler(this.Invitar_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(687, 320);
+            this.Controls.Add(this.Invitar);
             this.Controls.Add(this.ConectadosGrid);
             this.Controls.Add(this.Consultar);
             this.Controls.Add(this.Viciado);
@@ -203,7 +210,7 @@
         private System.Windows.Forms.RadioButton Viciado;
         private System.Windows.Forms.Button Consultar;
         private System.Windows.Forms.DataGridView ConectadosGrid;
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Button Invitar;
     }
 }
 

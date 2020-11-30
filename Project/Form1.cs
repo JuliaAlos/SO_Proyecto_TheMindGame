@@ -8,33 +8,195 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace WindowsFormsApplication1
 {
     public partial class Form1 : Form
     {
         Socket server;
+        Thread atender;
         string nombre;
+        string[] jugadores = new string [4];
+        int numSelecionados=0;
+        int[] filasGrid = new int[3];
+        List<Form2> formularios = new List<Form2>();
+
+     
+
+        delegate void DelegadoParaEscribir(string mensaje); 
         public Form1()
          
         {
             InitializeComponent();
+
         }
 
+        public void AbrirForm2(int id) {
+            int count = formularios.Count();
+            Form2 f2 = new Form2(count, id, server, nombre);
+            formularios.Add(f2);
+            f2.ShowDialog();
+            
+        }
+
+        public void Listaconectados(string mensaje){
+            string[] vector = mensaje.Split(',');
+            int numero = Convert.ToInt32(vector[0]);
+            for (int i = 1; i < 10; i++){
+                if (i <= numero)
+                    ConectadosGrid[0, i - 1].Value = vector[i];
+                else
+                    ConectadosGrid[0, i - 1].Value = "";
+            }
+        }
+
+        public void CambiarColor(string mensaje) {
+            this.BackColor = Color.Green;
+        }
+
+        private void AtenderServidor()
+        {
+            while (true)
+            {
+                //Recibimos mensaje del servidor
+                byte[] msg2 = new byte[80];
+                server.Receive(msg2);
+                string[] trozos = Encoding.ASCII.GetString(msg2).Split('/');
+                int codigo = Convert.ToInt32(trozos[0]);
+                int numform = Convert.ToInt32(trozos[1]);
+                string mensaje = trozos[2].Split('\0')[0];
+
+                switch (codigo)
+                {
+                    case 1:     //Registrar
+                        if (mensaje == "0")
+                        {
+                            MessageBox.Show(Usuario.Text + " registrado correctamente");
+                            DelegadoParaEscribir color = new DelegadoParaEscribir(CambiarColor);
+                            this.Invoke(color, new object[] { mensaje });
+                            nombre = Usuario.Text;
+                        }
+                        else
+                        {
+                            if(mensaje=="1")
+                                MessageBox.Show(Usuario.Text + " ya existe");
+
+                            else
+                                MessageBox.Show("Se ha alcanzado el maximo de usuarios");
+
+                            // Se terminó el servicio. 
+                            // Nos desconectamos
+                            atender.Abort();
+                            server.Shutdown(SocketShutdown.Both);
+                            server.Close();
+                        }
+                        break;
+
+                    case 2:     //Login
+                        if (mensaje == "0")
+                        {
+                            DelegadoParaEscribir color = new DelegadoParaEscribir(CambiarColor);
+                            this.Invoke(color, new object[] {mensaje});
+                            MessageBox.Show("Hola " + Usuario.Text);
+                            nombre = Usuario.Text;
+                        }
+                        else
+                        {
+                            if (mensaje == "1")
+                                MessageBox.Show("Usuario o contraseña incorrecta");
+
+                            else if (mensaje == "2")
+                                MessageBox.Show("Se ha alcanzado el maximo de usuarios");
+
+                            else
+                                MessageBox.Show(Usuario.Text + " ya tiene una sesion abierta");
+                            // Se terminó el servicio. 
+                            // Nos desconectamos
+                            atender.Abort();
+                            server.Shutdown(SocketShutdown.Both);
+                            server.Close();
+                        }
+
+                        break;
+
+                    case 3:     //El mas rapido
+                        MessageBox.Show("El mas ràpido ha sido: " + mensaje);
+                        break;
+
+                    case 4:     //Los que ganaron a Joel
+                        string[] jugador = mensaje.Split(',');
+                        string ganadores = jugador[0];
+                        for (int i = 1; i < jugador.Length - 1; i++)
+                        {
+                            ganadores = ganadores + ", " + jugador[i];
+                        }
+                        MessageBox.Show("Los que ganaron contra Joel son: " + ganadores);
+                        break;
+
+                    case 5:
+                        MessageBox.Show("El jugador que mas partidas ha jugado es. " + mensaje);
+                        break;
+
+                    case 6:
+                        DelegadoParaEscribir delegado = new DelegadoParaEscribir(Listaconectados);
+                        ConectadosGrid.Invoke(delegado,new object[] {mensaje});
+                        break;
+
+                    case 7:
+                        if (mensaje == "-1")
+                            MessageBox.Show("Lo sentimos, no se ha podido crear la partida");
+                        else
+                        {
+                            string[] partida = mensaje.Split(',');
+                            string pregunta = "Quieres unirte a la partida " + partida[0] + " con " + partida[1];
+                            DialogResult result1 = MessageBox.Show(pregunta,"Nueva partida",MessageBoxButtons.YesNo);
+                            if (result1 == DialogResult.Yes)
+                                mensaje = "7/0/"+partida[0]+","+ nombre+",YES";
+                            else
+                                mensaje = "7/0/" + partida[0] + ","+nombre+ ",NO";
+                            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                            server.Send(msg);
+                        }
+                        break;
+
+                    case 8:
+                        trozos = mensaje.Split(',');
+                        int ID;
+                        if (trozos[0] == "1")
+                        {
+                            ID = Convert.ToInt32(trozos[1]);
+                            ThreadStart ts = delegate { AbrirForm2(ID); };
+                            Thread T = new Thread(ts);
+                            T.Start();
+                        }
+                        else
+                            MessageBox.Show("No tienes suficientes amigos");
+                        break;
+                    case 9:
+                        formularios[numform].chat(mensaje);
+                        break;
+                }
+
+            }
+        }
+
+        
         private void Desconectar_Click(object sender, EventArgs e)
         {
 
             try
             {
-                
-                byte[] msg = System.Text.Encoding.ASCII.GetBytes("0/");
+                // Enviamos al servidor el nombre tecleado
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes("0/" + nombre);
                 server.Send(msg);
+
                 // Se terminó el servicio. 
                 // Nos desconectamos
                 this.BackColor = Color.Gray;
+                atender.Abort();
                 server.Shutdown(SocketShutdown.Both);
                 server.Close();
-                this.timer1.Stop();
 
 
             }
@@ -56,40 +218,18 @@ namespace WindowsFormsApplication1
                     //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
                     //al que deseamos conectarnos
                     IPAddress direc = IPAddress.Parse("192.168.56.102");
-                    IPEndPoint ipep = new IPEndPoint(direc, 9070);
-
-
+                    IPEndPoint ipep = new IPEndPoint(direc, 9020);
                     //Creamos el socket 
                     server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
                     server.Connect(ipep);//Intentamos conectar el socket
-                    string mensaje = "2/" + Usuario.Text + "/" + Contraseña.Text;
+                    //pongo en marcha el thread que atendrá los mensajes del servidor
+                    ThreadStart ts = delegate { AtenderServidor(); };
+                    atender = new Thread(ts);
+                    atender.Start();
                     // Enviamos al servidor el nombre tecleado
-                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                    byte[] msg = System.Text.Encoding.ASCII.GetBytes("2/0/" + Usuario.Text + "/" + Contraseña.Text);
                     server.Send(msg);
-
-                    //Recibimos la respuesta del servidor
-                    byte[] msg2 = new byte[80];
-                    server.Receive(msg2);
-                    mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
-                    if (mensaje == "0")
-                    {
-                        this.BackColor = Color.Green;
-                        MessageBox.Show("Hola " +Usuario.Text);
-                        nombre = Usuario.Text;
-                        this.timer1.Start();
-                     }
-
-                     else
-                     {
-                        MessageBox.Show(Usuario.Text + " no existe");
-                        msg = System.Text.Encoding.ASCII.GetBytes("0/");
-                        server.Send(msg);
-                        // Se terminó el servicio. 
-                        // Nos desconectamos
-                        server.Shutdown(SocketShutdown.Both);
-                        server.Close();
-                    }
+                    
                 }
 
                 else
@@ -110,49 +250,31 @@ namespace WindowsFormsApplication1
         {
             try
             {
-
+                
                 if ((Usuario.Text != "") && (Contraseña.Text != ""))
                 {
+
                     //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
                     //al que deseamos conectarnos
                     IPAddress direc = IPAddress.Parse("192.168.56.102");
-                    IPEndPoint ipep = new IPEndPoint(direc, 9070);
-
-
+                    IPEndPoint ipep = new IPEndPoint(direc, 9020);
                     //Creamos el socket 
                     server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                     server.Connect(ipep);//Intentamos conectar el socket
-
-                    string mensaje = "1/" + Usuario.Text + "/" + Contraseña.Text;
+                    //pongo en marcha el thread que atendrá los mensajes del servidor
+                    ThreadStart ts = delegate { AtenderServidor(); };
+                    atender = new Thread(ts);
+                    atender.Start();
                     // Enviamos al servidor el nombre tecleado
-                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                    byte[] msg = System.Text.Encoding.ASCII.GetBytes("1/0/" + Usuario.Text + "/" + Contraseña.Text);
                     server.Send(msg);
-
-                    //Recibimos la respuesta del servidor
-                    byte[] msg2 = new byte[80];
-                    server.Receive(msg2);
-                    mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
-                    if (mensaje == "0")
-                    {
-                        MessageBox.Show(Usuario.Text + " registrado correctamente");
-                    }
-                    else
-                    {
-                        MessageBox.Show(Usuario.Text + " ya existe");
-
-                        msg = System.Text.Encoding.ASCII.GetBytes("0/");
-                        server.Send(msg);
-                        // Se terminó el servicio. 
-                        // Nos desconectamos
-                        server.Shutdown(SocketShutdown.Both);
-                        server.Close();
-                    }
                 }
 
                 else
                 {
                     MessageBox.Show("Error en los campos de los datos");
                 }
+
             }
             catch (Exception)
             {
@@ -170,52 +292,28 @@ namespace WindowsFormsApplication1
                 if (Rapido.Checked)
                 {
                     // Quiere saber quien ha ganado mas rapido
-                    string mensaje = "3/";
                     // Enviamos al servidor el nombre tecleado
-                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                    byte[] msg = System.Text.Encoding.ASCII.GetBytes("3/0/");
                     server.Send(msg);
 
-                    //Recibimos la respuesta del servidor
-                    byte[] msg2 = new byte[80];
-                    server.Receive(msg2);
-                    mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
-                    MessageBox.Show("El mas ràpido ha sido: " + mensaje);
                 }
                 else if (Ganadores.Checked)
                 {
                     // Quiere saber quien ha ganado contra Joel
-                    string mensaje = "4/";
                     // Enviamos al servidor el nombre tecleado
-                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                    byte[] msg = System.Text.Encoding.ASCII.GetBytes("4/0/");
                     server.Send(msg);
 
-                    //Recibimos la respuesta del servidor
-                    byte[] msg2 = new byte[80];
-                    server.Receive(msg2);
-                    mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
-                    string[] jugador = mensaje.Split('/');
-                    string ganadores = "Los que ganaron contra Joel son: ";
-                    for (int i = 0; i < jugador.Length; i++)
-                    {
-                        ganadores = ganadores + jugador[i] + ", ";
-                    }
-                    MessageBox.Show(ganadores);
+                    
 
 
                 }
                 else if (Viciado.Checked)
                 {
                     // Quiere saber quien ha jugado mas partidas
-                    string mensaje = "5/";
                     // Enviamos al servidor el nombre tecleado
-                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                    byte[] msg = System.Text.Encoding.ASCII.GetBytes("5/0/");
                     server.Send(msg);
-
-                    //Recibimos la respuesta del servidor
-                    byte[] msg2 = new byte[80];
-                    server.Receive(msg2);
-                    mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
-                    MessageBox.Show("El jugador que mas partidas ha jugado es. "+mensaje);
                 }
             }
             catch (Exception)
@@ -226,28 +324,7 @@ namespace WindowsFormsApplication1
             } 
         }
 
-        
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            this.timer1.Interval = 1000;
-            // Quiere saber quien está conectado
-            byte[] msg = System.Text.Encoding.ASCII.GetBytes("/7");
-            server.Send(msg);
-
-            //Recibimos la respuesta del servidor
-            byte[] msg2 = new byte[80];
-            server.Receive(msg2);
-            string respuesta= Encoding.ASCII.GetString(msg2).Split('\0')[0];
-            //MessageBox.Show(respuesta);
-            string[] vector=respuesta.Split('/');
-            int i;
-            for (i = 0; i < vector.Length; i++)
-            {
-                ConectadosGrid[0,i].Value = vector[i];
-            }
-        }
-
+       
         private void Form1_Load(object sender, EventArgs e)
         {
             ConectadosGrid.Columns.Add("Usuario","Usuario");
@@ -259,6 +336,40 @@ namespace WindowsFormsApplication1
             for (i = 0; i < 10; i++){
 
                 ConectadosGrid[0, i].Value = "";
+            }
+        }
+
+        private void ConectadosGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (numSelecionados == 0)
+            {
+                jugadores[numSelecionados] = nombre;
+                numSelecionados++;
+            }
+
+            else
+            {
+                ConectadosGrid.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Green;
+                jugadores[numSelecionados] = ConectadosGrid.CurrentCell.Value.ToString();
+                filasGrid[numSelecionados - 1] = e.RowIndex;
+                numSelecionados++;
+            }
+        }
+
+        private void Invitar_Click(object sender, EventArgs e)
+        {
+            // Quiere invitar a jugar 
+            // Enviamos al servidor el nombre tecleado
+            string mensaje = "6/0/";
+            if (numSelecionados > 1)
+            {
+                for (int i = 0; i < numSelecionados; i++)
+                {
+                    mensaje = mensaje + jugadores[i] +",";
+                }
+                MessageBox.Show(mensaje);
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                server.Send(msg);
             }
         }
     }
