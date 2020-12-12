@@ -1,0 +1,94 @@
+C:\Users\fran9\Desktop\Proyecto-master\Project\Project\bin\Debug\Project.exe
+C:\Users\fran9\Desktop\Proyecto-master\Project\Project\bin\Debug\Project.pdb
+C:\Users\fran9\Desktop\Proyecto-master\Project\Project\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\fran9\Desktop\Proyecto-master\Project\Project\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\fran9\Desktop\Proyecto-master\Project\Project\obj\x86\Debug\Project.csproj.GenerateResource.Cache
+C:\Users\fran9\Desktop\Proyecto-master\Project\Project\obj\x86\Debug\Project.exe
+C:\Users\fran9\Desktop\Proyecto-master\Project\Project\obj\x86\Debug\Project.pdb
+C:\Users\fran9\Desktop\Proyecto-master\Project\Project\obj\x86\Debug\Project.csprojResolveAssemblyReference.cache
+C:\Users\fran9\Desktop\UPC\SO\Proyecto-master\Project\Project\obj\x86\Debug\Project.exe
+C:\Users\fran9\Desktop\UPC\SO\Proyecto-master\Project\Project\obj\x86\Debug\Project.pdb
+C:\Users\fran9\Desktop\UPC\SO\Proyecto-master\Project\Project\bin\Debug\Project.exe
+C:\Users\fran9\Desktop\UPC\SO\Proyecto-master\Project\Project\bin\Debug\Project.pdb
+C:\Users\fran9\Desktop\UPC\SO\Proyecto-master\Project\Project\obj\x86\Debug\Project.csprojResolveAssemblyReference.cache
+C:\Users\fran9\Desktop\UPC\SO\Proyecto-master\Project\Project\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\fran9\Desktop\UPC\SO\Proyecto-master\Project\Project\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\fran9\Desktop\UPC\SO\Proyecto-master\Project\Project\obj\x86\Debug\Project.csproj.GenerateResource.Cache
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\Project\obj\x86\Debug\Project.exe
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\Project\obj\x86\Debug\Project.pdb
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\Project\bin\Debug\Project.exe
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\Project\bin\Debug\Project.pdb
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\Project\obj\x86\Debug\Project.csprojResolveAssemblyReference.cache
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\Project\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\Project\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\Project\obj\x86\Debug\Project.csproj.GenerateResource.Cache
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\19_11\Project\obj\x86\Debug\Project.exe
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\19_11\Project\obj\x86\Debug\Project.pdb
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\19_11\Project\bin\Debug\Project.exe
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\19_11\Project\bin\Debug\Project.pdb
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\19_11\Project\obj\x86\Debug\Project.csprojResolveAssemblyReference.cache
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\19_11\Project\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\19_11\Project\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\19_11\Project\obj\x86\Debug\Project.csproj.GenerateResource.Cache
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\23_11\Project\obj\x86\Debug\Project.exe
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\23_11\Project\obj\x86\Debug\Project.pdb
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\23_11\Project\bin\Debug\Project.exe
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\23_11\Project\bin\Debug\Project.pdb
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\23_11\Project\obj\x86\Debug\Project.csprojResolveAssemblyReference.cache
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\23_11\Project\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\23_11\Project\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\23_11\Project\obj\x86\Debug\Project.csproj.GenerateResource.Cache
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\28_11\Project\obj\x86\Debug\Project.exe
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\28_11\Project\obj\x86\Debug\Project.pdb
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\28_11\Project\bin\Debug\Project.exe
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\28_11\Project\bin\Debug\Project.pdb
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\28_11\Project\obj\x86\Debug\Project.csprojResolveAssemblyReference.cache
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\28_11\Project\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\28_11\Project\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\28_11\Project\obj\x86\Debug\Project.csproj.GenerateResource.Cache
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\28_11\Project\obj\x86\Debug\WindowsFormsApplication1.Form2.resources
+C:\Users\joeld\Desktop\28_11\Project\obj\x86\Debug\Project.exe
+C:\Users\joeld\Desktop\28_11\Project\obj\x86\Debug\Project.pdb
+C:\Users\joeld\Desktop\28_11\Project\bin\Debug\Project.exe
+C:\Users\joeld\Desktop\28_11\Project\bin\Debug\Project.pdb
+C:\Users\joeld\Desktop\28_11\Project\obj\x86\Debug\Project.csprojResolveAssemblyReference.cache
+C:\Users\joeld\Desktop\28_11\Project\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\joeld\Desktop\28_11\Project\obj\x86\Debug\WindowsFormsApplication1.Form2.resources
+C:\Users\joeld\Desktop\28_11\Project\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\joeld\Desktop\28_11\Project\obj\x86\Debug\Project.csproj.GenerateResource.Cache
+C:\Users\joeld\Desktop\Projecte28112020\Project\obj\x86\Debug\Project.exe
+C:\Users\joeld\Desktop\Projecte28112020\Project\obj\x86\Debug\Project.pdb
+C:\Users\joeld\Desktop\Projecte28112020\Project\bin\Debug\Project.exe
+C:\Users\joeld\Desktop\Projecte28112020\Project\bin\Debug\Project.pdb
+C:\Users\joeld\Desktop\Projecte28112020\Project\obj\x86\Debug\Project.csprojResolveAssemblyReference.cache
+C:\Users\joeld\Desktop\Projecte28112020\Project\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\joeld\Desktop\Projecte28112020\Project\obj\x86\Debug\WindowsFormsApplication1.Form2.resources
+C:\Users\joeld\Desktop\Projecte28112020\Project\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\joeld\Desktop\Projecte28112020\Project\obj\x86\Debug\Project.csproj.GenerateResource.Cache
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\Projecte28112020\Projecte28112020\Project\obj\x86\Debug\Project.exe
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\Projecte28112020\Projecte28112020\Project\obj\x86\Debug\Project.pdb
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\Projecte28112020\Projecte28112020\Project\bin\Debug\Project.exe
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\Projecte28112020\Projecte28112020\Project\bin\Debug\Project.pdb
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\Projecte28112020\Projecte28112020\Project\obj\x86\Debug\Project.csprojResolveAssemblyReference.cache
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\Projecte28112020\Projecte28112020\Project\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\Projecte28112020\Projecte28112020\Project\obj\x86\Debug\WindowsFormsApplication1.Form2.resources
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\Projecte28112020\Projecte28112020\Project\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\julia\Desktop\UNI\3A\SISTEMES OPERATIUS\PROJECTE\Projecte28112020\Projecte28112020\Project\obj\x86\Debug\Project.csproj.GenerateResource.Cache
+C:\Users\joeld\Desktop\SO\Projecte\Entrega4\Project\obj\x86\Debug\Project.exe
+C:\Users\joeld\Desktop\SO\Projecte\Entrega4\Project\obj\x86\Debug\Project.pdb
+C:\Users\joeld\Desktop\SO\Projecte\Entrega4\Project\bin\Debug\Project.exe
+C:\Users\joeld\Desktop\SO\Projecte\Entrega4\Project\bin\Debug\Project.pdb
+C:\Users\joeld\Desktop\SO\Projecte\Entrega4\Project\obj\x86\Debug\Project.csprojResolveAssemblyReference.cache
+C:\Users\joeld\Desktop\SO\Projecte\Entrega4\Project\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\joeld\Desktop\SO\Projecte\Entrega4\Project\obj\x86\Debug\WindowsFormsApplication1.Form2.resources
+C:\Users\joeld\Desktop\SO\Projecte\Entrega4\Project\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\joeld\Desktop\SO\Projecte\Entrega4\Project\obj\x86\Debug\Project.csproj.GenerateResource.Cache
+C:\Users\joeld\Desktop\SO\Projecte\Entrega5\Project\obj\x86\Debug\Project.exe
+C:\Users\joeld\Desktop\SO\Projecte\Entrega5\Project\obj\x86\Debug\Project.pdb
+C:\Users\joeld\Desktop\SO\Projecte\Entrega5\Project\bin\Debug\Project.exe
+C:\Users\joeld\Desktop\SO\Projecte\Entrega5\Project\bin\Debug\Project.pdb
+C:\Users\joeld\Desktop\SO\Projecte\Entrega5\Project\obj\x86\Debug\Project.csprojResolveAssemblyReference.cache
+C:\Users\joeld\Desktop\SO\Projecte\Entrega5\Project\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\joeld\Desktop\SO\Projecte\Entrega5\Project\obj\x86\Debug\WindowsFormsApplication1.Form2.resources
+C:\Users\joeld\Desktop\SO\Projecte\Entrega5\Project\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\joeld\Desktop\SO\Projecte\Entrega5\Project\obj\x86\Debug\Project.csproj.GenerateResource.Cache

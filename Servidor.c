@@ -115,6 +115,7 @@ typedef struct{
 
 TablaPartidas Partidas;
 
+//Funcion que elimina de la partida a los jugadores que rechazaron la invitacion
 int EliminarJugadores(TablaPartidas *tabla, int IDpartida){
 	int i;
 	int j;

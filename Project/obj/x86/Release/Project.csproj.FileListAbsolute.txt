@@ -1,0 +1,16 @@
+C:\Users\joeld\Desktop\Projecte28112020\Project\bin\Release\Project.exe
+C:\Users\joeld\Desktop\Projecte28112020\Project\bin\Release\Project.pdb
+C:\Users\joeld\Desktop\Projecte28112020\Project\obj\x86\Release\WindowsFormsApplication1.Form1.resources
+C:\Users\joeld\Desktop\Projecte28112020\Project\obj\x86\Release\WindowsFormsApplication1.Form2.resources
+C:\Users\joeld\Desktop\Projecte28112020\Project\obj\x86\Release\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\joeld\Desktop\Projecte28112020\Project\obj\x86\Release\Project.csproj.GenerateResource.Cache
+C:\Users\joeld\Desktop\Projecte28112020\Project\obj\x86\Release\Project.exe
+C:\Users\joeld\Desktop\Projecte28112020\Project\obj\x86\Release\Project.pdb
+C:\Users\joeld\Desktop\SO\Projecte\Entrega5\Project\bin\Release\Project.exe
+C:\Users\joeld\Desktop\SO\Projecte\Entrega5\Project\bin\Release\Project.pdb
+C:\Users\joeld\Desktop\SO\Projecte\Entrega5\Project\obj\x86\Release\WindowsFormsApplication1.Form1.resources
+C:\Users\joeld\Desktop\SO\Projecte\Entrega5\Project\obj\x86\Release\WindowsFormsApplication1.Form2.resources
+C:\Users\joeld\Desktop\SO\Projecte\Entrega5\Project\obj\x86\Release\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\joeld\Desktop\SO\Projecte\Entrega5\Project\obj\x86\Release\Project.csproj.GenerateResource.Cache
+C:\Users\joeld\Desktop\SO\Projecte\Entrega5\Project\obj\x86\Release\Project.exe
+C:\Users\joeld\Desktop\SO\Projecte\Entrega5\Project\obj\x86\Release\Project.pdb
