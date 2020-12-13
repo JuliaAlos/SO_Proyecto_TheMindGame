@@ -15,15 +15,13 @@ namespace WindowsFormsApplication1
 {
     public partial class Form2 : Form
     {
-        int numForm;
         Socket server;
         string nombre;
         int id;
-        public Form2(int nForm, int id, Socket server, string nombre)
+        public Form2(int id, Socket server, string nombre)
         {
             InitializeComponent();
             CheckForIllegalCrossThreadCalls = false;
-            //this.numForm = nForm;
             this.id = id;
             this.server= server;
             this.nombre = nombre;
@@ -33,7 +31,7 @@ namespace WindowsFormsApplication1
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            nform.Text = "Partida " + numForm.ToString();
+            nform.Text = "Partida " + id.ToString();
             Image miImagen = Image.FromFile("logo.png");
             Imagen3.Image = miImagen;
             Imagen3.SizeMode = PictureBoxSizeMode.CenterImage;

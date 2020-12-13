@@ -29,12 +29,12 @@ typedef struct{
 
 ListaConectados lista;
 
+//Funcion que pone un usuario que se conecta a la lista de conectados. Devuelve -2 si el usuario ya est￡ en la lista, -1 si la lista est￡ llena y 0 si se ha puesto correctamente
 int Pon (ListaConectados *lista, char nombre[20], int socket){
-	//Pon usuario a la lista de conectados
-	if (lista->num == 100)//Lista llena
+	if (lista->num == 100)
 		return -1;
 	for(int j=0;j<lista->num;j++){ 
-		if(strcmp(lista->conectados[j].nombre,nombre)==0)//Usuario ya esta en la lista
+		if(strcmp(lista->conectados[j].nombre,nombre)==0)
 			return -2;
 	}
 	strcpy (lista->conectados[lista->num].nombre, nombre);
@@ -46,9 +46,8 @@ int Pon (ListaConectados *lista, char nombre[20], int socket){
 }
 
 
-
+//Funcion que devuelve el numero de la posicion que ocupa en la lista de conectados. Devuelve -1 si no est￡ en la lista
 int DamePosicion (ListaConectados *lista, char nombre[20]){
-	//Si el usuario esta en la lista nos devulve su posicion en la lista
 	for (int i =0; i<lista->num;i++){
 		if (strcmp(lista->conectados[i].nombre,nombre) == 0)
 			return i;
@@ -56,8 +55,8 @@ int DamePosicion (ListaConectados *lista, char nombre[20]){
 	return -1;
 }
 
+//Funcion que devuelve el numero de socket de un usuario. Devuelve -1 si no esta en la lista
 int DameSocket (ListaConectados *lista, char nombre[20]){
-	//Si el usuario esta en la lista nos devulve su socket
 	for (int i =0; i<lista->num;i++){
 		if (strcmp(lista->conectados[i].nombre,nombre) == 0)
 			return lista->conectados[i].socket;
@@ -65,8 +64,8 @@ int DameSocket (ListaConectados *lista, char nombre[20]){
 	return -1;
 }
 
+//Funcion que elimina un usuario y recoloca a los otros. Devuelve -1 si la lista est￡ llena y 0 si se ha eliminado correctamente.
 int Eliminar (ListaConectados *lista, char nombre[20]){
-	//Elimina el usuario y recoloca las usuarios
 	int pos = DamePosicion(lista,nombre);
 	if (pos == -1)
 		return -1;
@@ -77,18 +76,16 @@ int Eliminar (ListaConectados *lista, char nombre[20]){
 	return 0;
 }
 
-
+//Funcion que retorna un string con todos los conectados de la lista conectados, separados por comas.
 void DameConectados (ListaConectados *lista, char conectados[300]){
-	//Retorna un string con todos los conectados
 	sprintf(conectados,"%d",lista->num);
 	for (int j =0; j<lista->num;j++){
 		sprintf (conectados,"%s,%s",conectados,lista->conectados[j].nombre);
 	}
 }
 
-
+//Funcion que devuelve el socket del jugador en la lista de conectados. Devuelve -1 si el jugador no est￡ en la lista
 void SocketsJugadores (ListaConectados *lista, char jugadores[300], char sockets[300]){
-	//Devuleve el socket o -1 si no esta en la lista
 	char *p = strtok(jugadores,",");
 	while(p!=NULL){
 		
@@ -118,7 +115,22 @@ typedef struct{
 
 TablaPartidas Partidas;
 
+//Funcion que elimina de la partida a los jugadores que rechazaron la invitacion
+int EliminarJugadores(TablaPartidas *tabla, int IDpartida){
+	int i;
+	int j;
+	for (j=1;j<tabla->ListaPartidas[IDpartida].num;j++){
+		if(tabla->ListaPartidas[IDpartida].Respuesta[j]==0){
+			for(i=j;i<tabla->ListaPartidas[IDpartida].num-1;i++){
+			tabla->ListaPartidas[IDpartida].PartidaJugadores[i]=tabla->ListaPartidas[IDpartida].PartidaJugadores[i+1];
+			}
+			tabla->ListaPartidas[IDpartida].num--;
+		}
+	}
+	return 0;
+}
 
+//Funcion que incluye las respuestas de la peticion de partida. 
 int IncluirRespuesta(TablaPartidas *Tabla, int respuesta, int IDpartida, char nombre[10]){
 	int i=0;
 	int encontrado=0;
@@ -135,6 +147,7 @@ int IncluirRespuesta(TablaPartidas *Tabla, int respuesta, int IDpartida, char no
 	return Tabla->ListaPartidas[IDpartida].numRespuesta[0];
 }
 
+//Funcion que crea una partida con los jugadores invitados y el anfitrion. La funcin devuelve el numero de partida en la tabla de partidas.
 int CrearPartida (ListaConectados *lista, char jugadores[300], TablaPartidas *Tabla){
 	char *p =strtok( jugadores,",");
 	int Posicion;
@@ -153,7 +166,7 @@ int CrearPartida (ListaConectados *lista, char jugadores[300], TablaPartidas *Ta
 		}
 		p =strtok( NULL,",");
 	}
-	if(partida.num>=2){//Añadimos partida a la tabla
+	if(partida.num>=2){//Ponemos la partida en la tabla
 		partida.IDpartida= Tabla->numPartidas;
 		Tabla->ListaPartidas[Tabla->numPartidas]= partida;
 		Tabla->ListaPartidas[Tabla->numPartidas].numRespuesta[0]=0;
@@ -201,8 +214,7 @@ void *AtenderCliente (void *socket){
 		ret=read(sock_conn,peticion, sizeof(peticion));
 		
 		
-		// Tenemos que aÃ±adirle la marca de fin de string 
-		// para que no escriba lo que hay despues en el peticion
+		// Tenemos que poner la marca de fin de string para que no escriba lo que hay despues en el peticion
 		peticion[ret]='\0';
 		
 		//Escribimos el nombre en la consola
@@ -242,26 +254,26 @@ void *AtenderCliente (void *socket){
 				if (terminar ==0)
 					Modificacion=1;
 			}
-			else if (codigo ==3){
+			else if (codigo ==3){ //Consulta de quien ha sido el mas rapido en ganar
 				MasRapido(respuesta,conn);
 			}
-			else if (codigo == 4){
+			else if (codigo == 4){ //Consulta de quien han ganado a Joel
 				GanaronJoel(respuesta,conn);
 			}
-			else if (codigo ==5){
+			else if (codigo ==5){ //Consulta de quien ha sido quien m￡s ha jugado
 				Viciado(respuesta,conn);
 			}
-			else if (codigo ==6){
+			else if (codigo ==6){ //Invitar a jugar
 				char *InvitadosJuego[300];
 				p=strtok(NULL,"/");
 				strcpy(InvitadosJuego,p);
 				Invitar(InvitadosJuego,sock_conn);
 			}
-			else if (codigo ==7){
+			else if (codigo ==7){ //Respuestas de invitaci￳n
 				p=strtok(NULL,"/");
 				RespuestaInvitacion(p);
 			}
-			else if (codigo ==8){
+			else if (codigo ==8){ //Mensajes de chat
 				p=strtok(NULL,"/");
 				NuevoMensaje(p, numform);
 				
@@ -269,23 +281,19 @@ void *AtenderCliente (void *socket){
 			if (codigo !=6 && codigo !=7 && codigo!=8){
 				write (sock_conn,respuesta, strlen(respuesta));
 			}
-			
 		}
-		
 		if (Modificacion==1)
 		{
 			Conectados ();
 			Modificacion=0;
 		}
-		
 	}
 	// Se acabo el servicio para este cliente
 	close(sock_conn);
 }
 
-
+//Funcion para borrar al cliente de la lista y cerrar la conexion. Devuele 1 si todo OK.
 int Desconectar (char usuario[20]){
-	//Borramos el cliente de la lista y cerramos conexion
 	int res =DamePosicion (&lista, usuario);
 	if (res != -1) //Si esta en la lista lo eliminamos
 	{
@@ -296,8 +304,9 @@ int Desconectar (char usuario[20]){
 	return 1;
 }
 
+//Funcion para registrar al cliente
 int Registrar (char usuario[20],char password[20], char respuesta[100],MYSQL *conn,int sock_conn){
-	//Si el usuario no existe lo añadimos a la base de datos
+	//Si el usuario no existe lo ponemos en la base de datos
 	MYSQL_RES *resultado;
 	MYSQL_ROW row;
 	char consulta[100];
@@ -338,7 +347,7 @@ int Registrar (char usuario[20],char password[20], char respuesta[100],MYSQL *co
 		int res = Pon (&lista,usuario,sock_conn);
 		pthread_mutex_unlock (&mutex);
 		if (res==-1){
-			printf("No se puede añadir mas usuarios\n");
+			printf("No se pueden poner mas usuarios\n");
 			strcpy(respuesta,"1/0/2");
 			return 1;
 		}
@@ -347,10 +356,8 @@ int Registrar (char usuario[20],char password[20], char respuesta[100],MYSQL *co
 			strcpy(respuesta,"1/0/0");
 			return 0;
 		}
-		
 	}
 	else{
-		
 		printf("El usuario %s ya existe\n", row[0]);
 		strcpy(respuesta,"1/0/1");
 		return 1;
@@ -359,7 +366,7 @@ int Registrar (char usuario[20],char password[20], char respuesta[100],MYSQL *co
 
 
 int Login (char usuario[20],char password[20],char respuesta[100],MYSQL *conn,int sock_conn){
-	//Comprobamos si el usuario y contraseÃ±a son correctos. Si lo es lo aÃ±adimos 
+	//Comprobamos si el usuario y password son correctos. Si lo son los ponemos en la lista
 	MYSQL_RES *resultado;
 	MYSQL_ROW row;
 	char consulta[100];
@@ -385,7 +392,7 @@ int Login (char usuario[20],char password[20],char respuesta[100],MYSQL *conn,in
 		int res = Pon (&lista,usuario,sock_conn);
 		pthread_mutex_unlock (&mutex);
 		if (res==-1){
-			printf("No se puede añadir mas usuarios\n");
+			printf("No se puede aￃﾱadir mas usuarios\n");
 			strcpy(respuesta,"2/0/2");
 			return 1;
 		}
@@ -435,7 +442,7 @@ void MasRapido (char respuesta[100],MYSQL *conn){
 
 
 void GanaronJoel (char respuesta[100],MYSQL *conn){
-	//CONSULTA PARA QUE DE LA LISTA DE PERSONAS QUE GANARON UNA PARTIDA DONDE JUGÃ“ JOEL
+	//CONSULTA PARA QUE DE LA LISTA DE PERSONAS QUE GANARON UNA PARTIDA DONDE JUGￃﾃ￢ﾀﾜ JOEL
 	MYSQL_RES *resultado;
 	MYSQL_ROW row;
 	int err=mysql_query (conn, "SELECT DISTINCT Partida.Winner FROM Partida, Participantes WHERE Partida.ID IN (SELECT Participantes.ID_P FROM Participantes WHERE Participantes.ID_J=1) AND Partida.Winner != 'Joel'");
@@ -497,19 +504,17 @@ void Viciado (char respuesta [100],MYSQL *conn){
 		}
 		printf("El Jugador que mas partidas ha jugado es: %s\n", max_j);
 		sprintf(respuesta,"5/0/%s",max_j);
-		
 	}
 }
 
+//Funcion que envia a todos los clientes conectados una lista con todos los jugadores conectados. 
 void Conectados ()
 {
 	char notificacion[512];
 	char Jugadores[300];
 	DameConectados (&lista, Jugadores);
-	//notificar a todos los conectados
 	printf("%s\n",Jugadores);
 	sprintf(notificacion,"6/0/%s",Jugadores);
-	
 	printf("%s\n",notificacion);
 	for(int j=0;j<lista.num;j++){
 		write (lista.conectados[j].socket,notificacion, strlen(notificacion));
@@ -531,11 +536,11 @@ void Invitar (char jugadores[300],int sock_conn){
 		sprintf(notificacion,"7/0/%d,%s",Partidas.numPartidas-1,players);
 		for(int i=1;i<numJugadores;i++){
 			write (Partidas.ListaPartidas[Partidas.numPartidas-1].PartidaJugadores[i].socket,notificacion, strlen(notificacion));
-			//Partidas.ListaPartidas[Partidas.numPartidas-1].PartidaJugadores[i].socket
 		}
 	}
 }
 
+//Funcion que recoje las respuestas a las invitaciones a jugar. Si se cumplen los requisitos para poder jugar se envia 8/0/1 y sino 8/0/0
 void RespuestaInvitacion(char respuesta[300]){
 	printf("Respuesta %s\n",respuesta);
 	char *p= strtok(respuesta,",");
@@ -558,6 +563,7 @@ void RespuestaInvitacion(char respuesta[300]){
 		printf("RES2 %d\n",Partidas.ListaPartidas[IDpartida].numRespuesta[1]);
 		if (Partidas.ListaPartidas[IDpartida].numRespuesta[1]>0){
 			sprintf(notificacion,"8/0/1,%d",IDpartida);
+			EliminarJugadores(&Partidas, IDpartida);
 			for(int i=0; i<Partidas.ListaPartidas[IDpartida].num;i++)
 				write (Partidas.ListaPartidas[IDpartida].PartidaJugadores[i].socket,notificacion, strlen(notificacion));
 		}
@@ -565,12 +571,10 @@ void RespuestaInvitacion(char respuesta[300]){
 			sprintf(notificacion,"8/0/0,%d",IDpartida);
 			write (Partidas.ListaPartidas[IDpartida].PartidaJugadores[0].socket,notificacion, strlen(notificacion));
 		}
-		
-		
 	}
-	
 }
 
+//Funcion para enviar los mensajes que se muestran en el chat
 void NuevoMensaje(char mensaje[100], int idPartida){
 	printf("Respuesta %s\n",mensaje);
 	char notificacion[512];
@@ -607,7 +611,7 @@ int main(int argc, char *argv[])
 	//htonl formatea el numero que recibe al formato necesario
 	serv_adr.sin_addr.s_addr = htonl(INADDR_ANY);
 	// escucharemos en el port 9050
-	serv_adr.sin_port = htons(9020);
+	serv_adr.sin_port = htons(9050);
 	if (bind(sock_listen, (struct sockaddr *) &serv_adr, sizeof(serv_adr)) < 0){
 		
 		printf ("Error al bind");
@@ -636,5 +640,3 @@ int main(int argc, char *argv[])
 			i=0;
 	}
 }
-
-

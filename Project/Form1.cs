@@ -21,6 +21,7 @@ namespace WindowsFormsApplication1
         int numSelecionados=0;
         int[] filasGrid = new int[3];
         List<Form2> formularios = new List<Form2>();
+        int[] partidas= new int [100];
 
      
 
@@ -33,8 +34,9 @@ namespace WindowsFormsApplication1
         }
 
         public void AbrirForm2(int id) {
-            int count = formularios.Count();
-            Form2 f2 = new Form2(count, id, server, nombre);
+
+            partidas[id] = formularios.Count();
+            Form2 f2 = new Form2(id, server, nombre);
             formularios.Add(f2);
             f2.ShowDialog();
             
@@ -64,7 +66,7 @@ namespace WindowsFormsApplication1
                 server.Receive(msg2);
                 string[] trozos = Encoding.ASCII.GetString(msg2).Split('/');
                 int codigo = Convert.ToInt32(trozos[0]);
-                int numform = Convert.ToInt32(trozos[1]);
+                int idPartida = Convert.ToInt32(trozos[1]);
                 string mensaje = trozos[2].Split('\0')[0];
 
                 switch (codigo)
@@ -162,11 +164,9 @@ namespace WindowsFormsApplication1
 
                     case 8:
                         trozos = mensaje.Split(',');
-                        int ID;
                         if (trozos[0] == "1")
                         {
-                            ID = Convert.ToInt32(trozos[1]);
-                            ThreadStart ts = delegate { AbrirForm2(ID); };
+                            ThreadStart ts = delegate { AbrirForm2(idPartida); };
                             Thread T = new Thread(ts);
                             T.Start();
                         }
@@ -174,7 +174,7 @@ namespace WindowsFormsApplication1
                             MessageBox.Show("No tienes suficientes amigos");
                         break;
                     case 9:
-                        formularios[numform].chat(mensaje);
+                        formularios[partidas[idPartida]].chat(mensaje);
                         break;
                 }
 
@@ -218,7 +218,7 @@ namespace WindowsFormsApplication1
                     //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
                     //al que deseamos conectarnos
                     IPAddress direc = IPAddress.Parse("192.168.56.102");
-                    IPEndPoint ipep = new IPEndPoint(direc, 9020);
+                    IPEndPoint ipep = new IPEndPoint(direc, 9050);
                     //Creamos el socket 
                     server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                     server.Connect(ipep);//Intentamos conectar el socket
@@ -257,7 +257,7 @@ namespace WindowsFormsApplication1
                     //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
                     //al que deseamos conectarnos
                     IPAddress direc = IPAddress.Parse("192.168.56.102");
-                    IPEndPoint ipep = new IPEndPoint(direc, 9020);
+                    IPEndPoint ipep = new IPEndPoint(direc, 9050);
                     //Creamos el socket 
                     server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                     server.Connect(ipep);//Intentamos conectar el socket
