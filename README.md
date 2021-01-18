@@ -19,3 +19,7 @@
 #Version 5
 -->Manager Joel
 -->Verificador Júlia
+
+#Version Final
+-->Manager Fran
+-->Verificador Júlia
