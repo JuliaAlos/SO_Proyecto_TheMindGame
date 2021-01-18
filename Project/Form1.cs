@@ -16,45 +16,67 @@ namespace WindowsFormsApplication1
     {
         Socket server;
         Thread atender;
-        string nombre;
-        string[] jugadores = new string [4];
-        int numSelecionados=0;
-        int[] filasGrid = new int[3];
+
+        string nombre;//Nombre del usuario
+        string[] jugadores = new string [3];//Lista de invitados
+        int numSelecionados=0;//Contador de invitados
+        int ConectadosNum;
+        
         List<Form2> formularios = new List<Form2>();
-        int[] partidas= new int [100];
+        int[] partidas= new int [100]; //Lista para relacionar el numero de form con la id de la partida
 
-     
+        delegate void DelegadoParaEscribir(string mensaje);
 
-        delegate void DelegadoParaEscribir(string mensaje); 
-        public Form1()
-         
+        public Form1() 
         {
             InitializeComponent();
 
         }
 
-        public void AbrirForm2(int id) {
+        public void AbrirForm2(int id,string menjaseCartas, string mensajeJugadores) 
+        {//Abre un nuevo formulario y le envia los parametros necesarios para su correcta operacion
 
             partidas[id] = formularios.Count();
-            Form2 f2 = new Form2(id, server, nombre);
+            Form2 f2 = new Form2(id, server, nombre, menjaseCartas, mensajeJugadores);
             formularios.Add(f2);
             f2.ShowDialog();
-            
         }
 
-        public void Listaconectados(string mensaje){
+        public void Listaconectados(string mensaje)
+        {//Rellena el grid con los usuarios conectados
+        
             string[] vector = mensaje.Split(',');
-            int numero = Convert.ToInt32(vector[0]);
-            for (int i = 1; i < 10; i++){
-                if (i <= numero)
-                    ConectadosGrid[0, i - 1].Value = vector[i];
-                else
-                    ConectadosGrid[0, i - 1].Value = "";
+            ConectadosNum = Convert.ToInt32(vector[0]);
+            ConectadosGrid.Rows.Clear();
+            for (int i = 0;  (i<ConectadosNum); i++){
+                
+                    ConectadosGrid.Rows.Add(vector[i+1]);
+                
             }
         }
 
-        public void CambiarColor(string mensaje) {
-            this.BackColor = Color.Green;
+        public void DesbloquearFunciones(string Nombre)
+        {
+            ActivarOperaciones();
+            NombreLbl.Text = Nombre;
+        }
+
+        public void BloquearFunciones(string mensaje)
+        {
+            ActivarOperacionesIniciales();
+            InfoLbl.Text = "Usuario eliminado correctamente";
+            // Se terminó el servicio. 
+            // Nos desconectamos
+            atender.Abort();
+            server.Shutdown(SocketShutdown.Both);
+            server.Close();
+        }
+        public void EscribirRespuesta(string info) {
+            RespuestasBox.Text = info;
+        }
+        public void EscrivirInformacion(string info)
+        {
+            InfoLbl.Text = info;
         }
 
         private void AtenderServidor()
@@ -62,11 +84,13 @@ namespace WindowsFormsApplication1
             while (true)
             {
                 //Recibimos mensaje del servidor
-                byte[] msg2 = new byte[80];
+                byte[] msg2 = new byte[400];
                 server.Receive(msg2);
                 string[] trozos = Encoding.ASCII.GetString(msg2).Split('/');
-                int codigo = Convert.ToInt32(trozos[0]);
-                int idPartida = Convert.ToInt32(trozos[1]);
+                //MessageBox.Show(trozos[0] + "/" + trozos[1] + "/" + trozos[2]);
+                int codigo = Convert.ToInt32(trozos[0]);//Tipo de mensaje
+                int idPartida = Convert.ToInt32(trozos[1]);//Obtenemos el id de la partida
+                //Limpiamos el mensaje
                 string mensaje = trozos[2].Split('\0')[0];
 
                 switch (codigo)
@@ -74,18 +98,18 @@ namespace WindowsFormsApplication1
                     case 1:     //Registrar
                         if (mensaje == "0")
                         {
-                            MessageBox.Show(Usuario.Text + " registrado correctamente");
-                            DelegadoParaEscribir color = new DelegadoParaEscribir(CambiarColor);
-                            this.Invoke(color, new object[] { mensaje });
                             nombre = Usuario.Text;
+                            DelegadoParaEscribir delegado = new DelegadoParaEscribir(DesbloquearFunciones);
+                            this.Invoke(delegado, new object[] { nombre });
                         }
                         else
                         {
-                            if(mensaje=="1")
-                                MessageBox.Show(Usuario.Text + " ya existe");
-
+                            DelegadoParaEscribir delegado = new DelegadoParaEscribir(EscrivirInformacion);
+                            if (mensaje == "1")                                
+                                this.Invoke(delegado, new object[] { "Este usuario ya existe" });
                             else
-                                MessageBox.Show("Se ha alcanzado el maximo de usuarios");
+                                this.Invoke(delegado, new object[] { "Registro correcto, pero se ha alcanzado el \n maximo de usuarios, intenta conectarte más tarde" });
+                                
 
                             // Se terminó el servicio. 
                             // Nos desconectamos
@@ -98,21 +122,21 @@ namespace WindowsFormsApplication1
                     case 2:     //Login
                         if (mensaje == "0")
                         {
-                            DelegadoParaEscribir color = new DelegadoParaEscribir(CambiarColor);
-                            this.Invoke(color, new object[] {mensaje});
-                            MessageBox.Show("Hola " + Usuario.Text);
                             nombre = Usuario.Text;
+                            DelegadoParaEscribir delegado = new DelegadoParaEscribir(DesbloquearFunciones);
+                            this.Invoke(delegado, new object[] { nombre });
                         }
                         else
                         {
+                            DelegadoParaEscribir delegado = new DelegadoParaEscribir(EscrivirInformacion);
                             if (mensaje == "1")
-                                MessageBox.Show("Usuario o contraseña incorrecta");
+                                this.Invoke(delegado, new object[] {"Usuario y/o contraseña incorrecta"});
 
                             else if (mensaje == "2")
-                                MessageBox.Show("Se ha alcanzado el maximo de usuarios");
+                                this.Invoke(delegado, new object[] {"Se ha alcanzado el maximo de usuarios conectados \n Intentalo más tarde"});
 
                             else
-                                MessageBox.Show(Usuario.Text + " ya tiene una sesion abierta");
+                                this.Invoke(delegado, new object[] {Usuario.Text + " ya tiene una sesion abierta"});
                             // Se terminó el servicio. 
                             // Nos desconectamos
                             atender.Abort();
@@ -123,36 +147,41 @@ namespace WindowsFormsApplication1
                         break;
 
                     case 3:     //El mas rapido
-                        MessageBox.Show("El mas ràpido ha sido: " + mensaje);
+                        DelegadoParaEscribir delegado5 = new DelegadoParaEscribir(EscribirRespuesta);
+                        RespuestasBox.Invoke(delegado5, new object[] { mensaje });
                         break;
 
                     case 4:     //Los que ganaron a Joel
-                        string[] jugador = mensaje.Split(',');
-                        string ganadores = jugador[0];
-                        for (int i = 1; i < jugador.Length - 1; i++)
+                        string[] ganadores = mensaje.Split('*');
+                        string respuesta = ganadores[0];
+                        for (int i = 1; i < ganadores.Length; i++)
                         {
-                            ganadores = ganadores + ", " + jugador[i];
+                            respuesta = respuesta + "\r\n\r\n" + ganadores[i];
                         }
-                        MessageBox.Show("Los que ganaron contra Joel son: " + ganadores);
+                        DelegadoParaEscribir delegado3 = new DelegadoParaEscribir(EscribirRespuesta);
+                        RespuestasBox.Invoke(delegado3, new object[] { respuesta });
                         break;
 
                     case 5:
-                        MessageBox.Show("El jugador que mas partidas ha jugado es. " + mensaje);
+                        string [] Viciado = mensaje.Split(',');
+                        DelegadoParaEscribir delegado6 = new DelegadoParaEscribir(EscribirRespuesta);
+                        RespuestasBox.Invoke(delegado6, new object[] { "El jugador que mas partidas ha jugado es " +  Viciado[0]+ " y ha jugado " + Viciado[1]+ " veces"});
                         break;
 
-                    case 6:
-                        DelegadoParaEscribir delegado = new DelegadoParaEscribir(Listaconectados);
-                        ConectadosGrid.Invoke(delegado,new object[] {mensaje});
+                    case 6:     //Actualiza la lista de conectados en el grid
+                        DelegadoParaEscribir delegado2 = new DelegadoParaEscribir(Listaconectados);
+                        ConectadosGrid.Invoke(delegado2,new object[] {mensaje});
                         break;
 
-                    case 7:
+                    case 7:     //Crear partida o preguntar si quiere unirse a una
                         if (mensaje == "-1")
                             MessageBox.Show("Lo sentimos, no se ha podido crear la partida");
                         else
                         {
                             string[] partida = mensaje.Split(',');
-                            string pregunta = "Quieres unirte a la partida " + partida[0] + " con " + partida[1];
-                            DialogResult result1 = MessageBox.Show(pregunta,"Nueva partida",MessageBoxButtons.YesNo);
+                            string pregunta = "Quieres unirte a una partida con " + partida[1];
+
+                            DialogResult result1 = MessageBox.Show(pregunta, "Nueva partida", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                             if (result1 == DialogResult.Yes)
                                 mensaje = "7/0/"+partida[0]+","+ nombre+",YES";
                             else
@@ -162,22 +191,43 @@ namespace WindowsFormsApplication1
                         }
                         break;
 
-                    case 8:
-                        trozos = mensaje.Split(',');
-                        if (trozos[0] == "1")
+                    case 8:     //Iniciar el form de la partida si hay suficientes jugadores
+                        trozos = mensaje.Split('-');
+                        string [] aux = trozos[0].Split(',');
+                        if (aux[0] == "1")
                         {
-                            ThreadStart ts = delegate { AbrirForm2(idPartida); };
+                            string mensajeJugadores = trozos[1];
+                            string mensajeCartas = trozos[2];
+                            idPartida = Convert.ToInt32(aux[1]);
+                            ThreadStart ts = delegate { AbrirForm2(idPartida,mensajeCartas,mensajeJugadores); };
                             Thread T = new Thread(ts);
-                            T.Start();
+                            T.Start();                            
                         }
                         else
                             MessageBox.Show("No tienes suficientes amigos");
                         break;
-                    case 9:
+                    case 9:     //Envia mensaje del chat al formulario correcto
                         formularios[partidas[idPartida]].chat(mensaje);
                         break;
-                }
 
+                    case 10:
+                        if (mensaje == "0")
+                        {
+                            DelegadoParaEscribir delegado4 = new DelegadoParaEscribir(BloquearFunciones);
+                            this.Invoke(delegado4, new object[] { "" });
+                        }
+                        break;
+
+                    case 11:    //Envia la jugada realizada por un jugador al formulario correspondente
+                        formularios[partidas[idPartida]].Jugada(mensaje);
+                        break;
+                    case 12:    //Un jugador se ha desconectado
+                        formularios[partidas[idPartida]].JugadorDesconectado(mensaje);
+                        break;
+                    case 13:    //Jugadores ganan la ronda y pasan al siguiente nivel
+                        formularios[partidas[idPartida]].NextLevel(mensaje);
+                        break;
+                }
             }
         }
 
@@ -187,18 +237,18 @@ namespace WindowsFormsApplication1
 
             try
             {
-                // Enviamos al servidor el nombre tecleado
-                byte[] msg = System.Text.Encoding.ASCII.GetBytes("0/" + nombre);
+                // Enviamos al servidor el nombre tecleado para realizar la desconexion
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes("0/");
                 server.Send(msg);
 
                 // Se terminó el servicio. 
                 // Nos desconectamos
-                this.BackColor = Color.Gray;
                 atender.Abort();
                 server.Shutdown(SocketShutdown.Both);
                 server.Close();
-
-
+                for(int i=0; i<formularios.Count();i++)
+                    formularios[i].Close();
+                ActivarOperacionesIniciales();
             }
             catch (Exception)
             {
@@ -217,16 +267,19 @@ namespace WindowsFormsApplication1
                 {
                     //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
                     //al que deseamos conectarnos
-                    IPAddress direc = IPAddress.Parse("192.168.56.102");
-                    IPEndPoint ipep = new IPEndPoint(direc, 9050);
+                    IPAddress direc = IPAddress.Parse("147.83.117.22");
+                    IPEndPoint ipep = new IPEndPoint(direc, 50063);
                     //Creamos el socket 
                     server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                    server.Connect(ipep);//Intentamos conectar el socket
-                    //pongo en marcha el thread que atendrá los mensajes del servidor
+                    //Intentamos conectar el socket
+                    server.Connect(ipep);
+                    
+                    //Pongo en marcha el thread que atendrá los mensajes del servidor
                     ThreadStart ts = delegate { AtenderServidor(); };
                     atender = new Thread(ts);
                     atender.Start();
-                    // Enviamos al servidor el nombre tecleado
+
+                    // Enviamos al servidor el nombre tecleado con la contraseña
                     byte[] msg = System.Text.Encoding.ASCII.GetBytes("2/0/" + Usuario.Text + "/" + Contraseña.Text);
                     server.Send(msg);
                     
@@ -234,7 +287,7 @@ namespace WindowsFormsApplication1
 
                 else
                 {
-                    MessageBox.Show("Error en los campos de los datos");
+                    MessageBox.Show("Error al introducir los datos, asegurate que has rellenado los campos correctamente");
                 }
             }
             catch (Exception)
@@ -245,34 +298,37 @@ namespace WindowsFormsApplication1
             }
 
         }
-
-        private void Registro_botton_Click_1(object sender, EventArgs e)
+        
+        private void Registro_Click(object sender, EventArgs e)
         {
             try
             {
-                
+
                 if ((Usuario.Text != "") && (Contraseña.Text != ""))
                 {
 
                     //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
                     //al que deseamos conectarnos
-                    IPAddress direc = IPAddress.Parse("192.168.56.102");
-                    IPEndPoint ipep = new IPEndPoint(direc, 9050);
+                    IPAddress direc = IPAddress.Parse("147.83.117.22");
+                    IPEndPoint ipep = new IPEndPoint(direc, 50063);
                     //Creamos el socket 
                     server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                    server.Connect(ipep);//Intentamos conectar el socket
-                    //pongo en marcha el thread que atendrá los mensajes del servidor
+                    //Intentamos conectar el socket
+                    server.Connect(ipep);
+
+                    //Pongo en marcha el thread que atendrá los mensajes del servidor
                     ThreadStart ts = delegate { AtenderServidor(); };
                     atender = new Thread(ts);
                     atender.Start();
-                    // Enviamos al servidor el nombre tecleado
+
+                    // Enviamos al servidor el nombre tecleado con la nueva contraseña
                     byte[] msg = System.Text.Encoding.ASCII.GetBytes("1/0/" + Usuario.Text + "/" + Contraseña.Text);
                     server.Send(msg);
                 }
 
                 else
                 {
-                    MessageBox.Show("Error en los campos de los datos");
+                    MessageBox.Show("Error al introducir los datos, asegurate que has rellenado los campos correctamente");
                 }
 
             }
@@ -286,35 +342,31 @@ namespace WindowsFormsApplication1
 
         private void Consultar_Click(object sender, EventArgs e)
         {
+            
             try
             {
-
                 if (Rapido.Checked)
                 {
                     // Quiere saber quien ha ganado mas rapido
-                    // Enviamos al servidor el nombre tecleado
                     byte[] msg = System.Text.Encoding.ASCII.GetBytes("3/0/");
                     server.Send(msg);
-
                 }
-                else if (Ganadores.Checked)
+
+                else if (Ganadores.Checked && NombreConsulta.Text !="")
                 {
-                    // Quiere saber quien ha ganado contra Joel
-                    // Enviamos al servidor el nombre tecleado
-                    byte[] msg = System.Text.Encoding.ASCII.GetBytes("4/0/");
+                    // Quiere saber quien ha ganado contra una persona
+                    string mensaje = ("4/0/" + NombreConsulta.Text);
+                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                     server.Send(msg);
-
-                    
-
-
                 }
+
                 else if (Viciado.Checked)
                 {
                     // Quiere saber quien ha jugado mas partidas
-                    // Enviamos al servidor el nombre tecleado
                     byte[] msg = System.Text.Encoding.ASCII.GetBytes("5/0/");
                     server.Send(msg);
                 }
+                
             }
             catch (Exception)
             {
@@ -327,50 +379,157 @@ namespace WindowsFormsApplication1
        
         private void Form1_Load(object sender, EventArgs e)
         {
-            ConectadosGrid.Columns.Add("Usuario","Usuario");
-            ConectadosGrid.RowCount = 10;
+            //Preparamos el Grid donde se mostraran los usuarios conectados
+            ConectadosGrid.Columns.Add("Usuarios conectados", "Usuarios conectados");
             ConectadosGrid.ColumnHeadersVisible = true;
             ConectadosGrid.RowHeadersVisible = false;
             ConectadosGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-            int i;
-            for (i = 0; i < 10; i++){
-
-                ConectadosGrid[0, i].Value = "";
-            }
+            ConectadosGrid.Columns["Usuarios conectados"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            ConectadosNum = 0;
+            ActivarOperacionesIniciales();
         }
 
-        private void ConectadosGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        public void ActivarOperaciones()
         {
-            if (numSelecionados == 0)
+            //Ocultamos las operaciones que ya no se pueden realizar
+            UsuarioLbl.Visible = false;
+            PswLbl.Visible = false;
+            Usuario.Visible = false;
+            Contraseña.Visible = false;
+            Login.Visible = false;
+            Registro.Visible = false;
+            InfoLbl.Visible = false;
+            PswVisible.Visible = false;
+            
+            //Activa las que ahora si se pueden
+            Eliminar.Visible = true;
+            ConectadosGrid.Visible = true;
+            Invitar.Visible = true;
+            Desconectar.Visible = true;
+            Rapido.Visible = true;
+            Ganadores.Visible = true;
+            Viciado.Visible = true;
+            Consultar.Visible = true;
+            NombreLbl.Visible = true;
+            RespuestasBox.Visible = true;
+            NombreConsulta.Visible = true;
+
+            this.BackColor = Color.PaleGreen;
+        }
+
+        public void ActivarOperacionesIniciales()
+        {
+            //Ocultamos las operaciones que no se pueden realizar
+            Eliminar.Visible = false;
+            ConectadosGrid.Visible = false;
+            Invitar.Visible = false;
+            Desconectar.Visible = false;
+            Rapido.Visible = false;
+            Ganadores.Visible = false;
+            Viciado.Visible = false;
+            Consultar.Visible = false;
+            NombreLbl.Visible = false;
+            RespuestasBox.Visible = false;
+            NombreConsulta.Visible = false;
+            //Activa las que si se pueden
+            UsuarioLbl.Visible = true;
+            PswLbl.Visible = true;
+            Usuario.Visible = true;
+            Contraseña.Visible = true;
+            Login.Visible = true;
+            Registro.Visible = true;
+            PswVisible.Visible = true;
+            InfoLbl.Visible = true;
+            InfoLbl.Text = "";
+
+            this.BackColor = Color.PowderBlue;
+        }
+        private void ConectadosGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        {//Recoge los nombres de los jugadores que quiere invitar a la partida
+            if (ConectadosGrid.CurrentCell.Value != null)
             {
-                jugadores[numSelecionados] = nombre;
-                numSelecionados++;
+                string selecionado = ConectadosGrid.CurrentCell.Value.ToString();//Recoge el nombre de la celda
+
+                if (selecionado != nombre)//Solo permitimos selecionar las que no son el propio usuario
+                {
+                    if (numSelecionados == 3)
+                        MaxLbl.Text = "Has alcanzado el maximo permitido de jugadores \n            Empezar partida clicando a Invitar";
+
+                    else if ((selecionado != jugadores[0]) && (selecionado != jugadores[1]) && (selecionado != jugadores[2]))//Si aun no la hemos selecionado la añadimos
+                    {
+                        jugadores[numSelecionados] = selecionado;
+                        numSelecionados++;
+                        MaxLbl.Text = "";
+                    }
+                    else //Deselecionamos al jugador
+                    {
+                        bool encontrado = false;
+                        for (int i = 0; i < numSelecionados; i++)
+                        {
+                            if (jugadores[i] == selecionado)
+                                encontrado = true;
+                            if (encontrado)
+                                jugadores[i] = jugadores[i + 1];
+                        }
+                        numSelecionados--;
+                        MaxLbl.Text = "";
+                    }
+                    selecionado = "";
+                    for (int i = 0; i < numSelecionados; i++)
+                        selecionado = selecionado + jugadores[i] + ",";
+                    InvitarLbl.Text = selecionado;
+                }
             }
 
-            else
-            {
-                ConectadosGrid.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Green;
-                jugadores[numSelecionados] = ConectadosGrid.CurrentCell.Value.ToString();
-                filasGrid[numSelecionados - 1] = e.RowIndex;
-                numSelecionados++;
-            }
+            
         }
 
         private void Invitar_Click(object sender, EventArgs e)
-        {
-            // Quiere invitar a jugar 
-            // Enviamos al servidor el nombre tecleado
-            string mensaje = "6/0/";
-            if (numSelecionados > 1)
+        {// Quiere invitar a jugar
+             
+            // Enviamos al servidor el nombre del usuario más sus invitados
+            string mensaje = "6/0/"+nombre+",";
+            if (numSelecionados > 0)
             {
                 for (int i = 0; i < numSelecionados; i++)
                 {
-                    mensaje = mensaje + jugadores[i] +",";
+                    mensaje = mensaje + jugadores[i] + ",";
                 }
-                MessageBox.Show(mensaje);
+                //MessageBox.Show(mensaje);
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                 server.Send(msg);
             }
+            else
+                MaxLbl.Text = "Primero debes seleccionar a un jugador";
+
+            //Limpiamos el vector de jugadores
+            numSelecionados = 0;
+            for (int i = 0; i < 3; i++)
+                jugadores[i] = "";
+            InvitarLbl.Text ="";
+            MaxLbl.Text = "";
         }
+
+        private void Eliminar_Click(object sender, EventArgs e)
+        {
+            string mensaje = "9/0/"+nombre;
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+            server.Send(msg);
+            ActivarOperacionesIniciales();
+        }
+
+        private void PswVisible_CheckedChanged(object sender, EventArgs e)
+        {
+            //evento decorativo que permita ocultar o visualizar la contraseña mientras se inserta en el textbox password
+            {
+                if (PswVisible.Checked == true)
+                    Contraseña.PasswordChar = '\0';
+                    
+                else
+                    Contraseña.PasswordChar = '✿';
+            }
+        }
+
+        
     }
 }
